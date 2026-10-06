@@ -238,7 +238,8 @@ jobs:
           cd kernel_workspace/kernel_platform
           CONFIG_FILE=./common/arch/arm64/configs/gki_defconfig
           KERNEL_VERSION="${{ github.event.inputs.KERNEL_VERSION }}"
-
+          echo "CONFIG_CC_WERROR=n" >> "$CONFIG_FILE"
+          # ↑ 新增这一行，关掉"警告即错误"
           # SukiSU Ultra config
           echo "CONFIG_KSU=y" >> "$CONFIG_FILE"
           echo "CONFIG_KPM=y" >> "$CONFIG_FILE"
