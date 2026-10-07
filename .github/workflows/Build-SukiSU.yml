@@ -316,6 +316,13 @@ jobs:
             fi
           fi
 
+      - name: Fix unused code in task_mmu.c
+        run: |
+          cd kernel_workspace/kernel_platform/common
+          sed -i '/struct dentry \*dentry;/d' fs/proc/task_mmu.c
+          sed -i '/^[[:space:]]*bypass:/d' fs/proc/task_mmu.c
+          echo "patched task_mmu.c done"
+
       - name: Build kernel
         if: ${{ github.event.inputs.CPU == 'sm8650' || github.event.inputs.CPU == 'sm7675' }}
         run: |
