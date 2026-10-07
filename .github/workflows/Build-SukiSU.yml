@@ -316,13 +316,16 @@ jobs:
             fi
           fi
 
-      - name: Fix unused code in task_mmu.c
+      - name: Fix dead code from susfs patch
         run: |
           cd kernel_workspace/kernel_platform/common
           sed -i '/struct dentry \*dentry;/d' fs/proc/task_mmu.c
           sed -i '/^[[:space:]]*bypass:/d' fs/proc/task_mmu.c
+          sed -i 's/static void show_vma_header_prefix_fake/static void __maybe_unused show_vma_header_prefix_fake/' fs/proc/task_mmu.c
+          cd ..
+          echo 'KCFLAGS="${KCFLAGS} -Wno-unused-function -Wno-unused-variable -Wno-unused-label"' >> common/build.config.gki
           echo "patched task_mmu.c done"
-
+          
       - name: Build kernel
         if: ${{ github.event.inputs.CPU == 'sm8650' || github.event.inputs.CPU == 'sm7675' }}
         run: |
